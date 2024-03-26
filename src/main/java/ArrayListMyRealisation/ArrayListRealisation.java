@@ -248,8 +248,9 @@ public class ArrayListRealisation <E> implements List<E> {
 	public void add(int index, E element) {
 		if (index < 0)
 			throw new IllegalArgumentException("Index cannot be < 0");
-		if (index >= size)
+		if (index > size)
 			throw new IndexOutOfBoundsException(String.format("Index %s out of biunds for length %s", index, size));
+		if (size == values.length) resize();
 		E[] prevValues = values;
 		values = (E[]) new Object[prevValues.length];
 		System.arraycopy(prevValues, 0, values, 0, index);

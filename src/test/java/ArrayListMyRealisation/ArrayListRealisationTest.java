@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -85,7 +86,6 @@ class ArrayListRealisationTest {
 		integers1.add(3);
 
 		Assertions.assertTrue(integers.addAll(2, integers1));
-		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> integers.addAll(5, integers1));
 	}
 
 	@Test
@@ -153,7 +153,40 @@ class ArrayListRealisationTest {
 			Assertions.assertTrue(strings.add(Integer.toString(i)));
 		}
 	}
-	
+
+	/**
+	 * checks that after many operations of adding an element by index,
+	 * the number of elements is correct
+	 */
+	@Test
+	void addByIndexWithLoop() {
+		ArrayListRealisation<Object> objects = new ArrayListRealisation<>();
+		for (int i = 0; i < 10000; i++) {
+			objects.add(0, new Object());
+		}
+		Assertions.assertEquals(10000, objects.size());
+	}
+
+	/**
+	 * This test checks that the array changes dynamically when overflowing
+	 * the reflection mechanism is used to access a private class field
+	 */
+	@Test
+	void addByIndexWithLoopValuesLength() {
+		ArrayListRealisation<Object> objects = new ArrayListRealisation<>();
+		for (int i = 0; i < 11; i++) {
+			objects.add(0, new Object());
+		}
+		try {
+			Field field = objects.getClass().getDeclaredField("values");
+			field.setAccessible(true);
+			Object[] values = (Object[]) field.get(objects);
+			Assertions.assertEquals(16, values.length);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@Test
 	void remove() {
 		Assertions.assertTrue(integers.remove((Object)2));
