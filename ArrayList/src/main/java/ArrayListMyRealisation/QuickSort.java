@@ -5,11 +5,11 @@ import java.util.List;
 
 public class QuickSort {
 	
-	public static <E extends Comparable<E>> void quickSort(List<E> list, int startIndex, int endIndex) {
+	public static <E extends Comparable<E>> boolean quickSort(List<E> list, int startIndex, int endIndex) {
 		
-		if (list.size() == 0) return;
+		if (list.isEmpty()) return false;
 		
-		if (startIndex >= endIndex) return;
+		if (startIndex >= endIndex) return false;
 		
 		int pivotIndex = startIndex + (endIndex - startIndex) / 2;
 		E pivot = list.get(pivotIndex);
@@ -41,6 +41,7 @@ public class QuickSort {
 				quickSort(list, i, endIndex);
 			}
 		}
+		return true;
 	}
 	
 	

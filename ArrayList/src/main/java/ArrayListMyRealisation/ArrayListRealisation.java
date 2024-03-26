@@ -1,9 +1,6 @@
 package ArrayListMyRealisation;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Custom implementation of the ArrayList class
@@ -164,12 +161,11 @@ public class ArrayListRealisation <E> implements List<E> {
 	 * @return true if all elements added, false otherwise 
 	 */
 	public boolean addAll(int index, Collection<? extends E> c) {
-		boolean added = false;
 		for (E elem : c) {
 			add(index, elem);
 			index++;
 		}
-		return added;
+		return true;
 	}
 
 	/**
@@ -193,7 +189,7 @@ public class ArrayListRealisation <E> implements List<E> {
 	public boolean retainAll(Collection<?> c) {
 		boolean removed = false;
 		for (Object o : c) {
-			if (!contains(o))
+			if (contains(o))
 				removed = remove(o);
 		}
 		return removed;
@@ -360,11 +356,12 @@ public class ArrayListRealisation <E> implements List<E> {
 
 		@Override
 		public boolean hasNext() {
-			return cursor == size ? false : true;
+			return cursor != size;
 		}
 
 		@Override
 		public E next() {
+			if (values[cursor++] == null) throw new NoSuchElementException();
 			return values[cursor++];
 		}
 		
